@@ -37,6 +37,41 @@ function App() {
     setColors([...colors])
   }
 
+  const [radioSelection, setRadioSelection]  = useState('male')
+
+  const handleRadioChange = (e) => {
+    console.log(e.target.value);
+    setRadioSelection(e.target.value);
+   }
+
+
+   const [formData, setFormData] = useState({name:'',email:'',message:''});
+
+   // e.target is the input calling the method
+   const handleFormChange = (e) => {
+     const {name, value} = e.target;
+     // e.target.value -> whatever user input in the form
+     // e.target.name  ->name property from the form
+
+     // update the stateformdata 
+     // the value of formData before the update is defined in prevFormData
+
+    // setFormData({...formData, [name]:value}))
+    // name  - Muzaffar
+    // email - wanmuz@gmail.com
+    // message - Please help me with bug abc
+    
+     setFormData((prevFormData)=> ({...prevFormData, [name]:value}));
+   }
+
+   const handleSubmit = (e) => {
+    // Override the default SSR form behaviour
+    e.preventDefault();
+    console.log(formData.name);
+    console.log(formData.email);
+    console.log(formData.message);
+   }
+
   return (
     <>
       <div>
@@ -83,6 +118,34 @@ function App() {
             }</ul>
           </div>
         </ul>
+      </div>
+      <div>
+        <p>Select a gender</p>
+      <div onChange={handleRadioChange}>
+        {
+          options.map(val=>
+            <p key={val.value}>
+            <input type="radio" value={val.value} 
+            name="gender"/>{val.name}
+            </p>
+            )
+        }
+        <p>Selection from Radio: {radioSelection}</p>
+        </div>
+      </div>
+
+      <div>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor='name'>Name</label>
+          <input type="text" name="name" value={formData.name} onChange={handleFormChange}/>
+
+          <label htmlFor='email'>Email</label>
+          <input type="email" name="email" value={formData.email} onChange={handleFormChange}/>
+
+          <label htmlFor='message'>Message</label>
+          <textarea name="message" value={formData.message} onChange={handleFormChange}/>
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </>
   )
