@@ -1,4 +1,5 @@
 import { useState,useRef } from 'react'
+import { useForm } from 'react-hook-form';
 import './App.css'
 
 function App() {
@@ -81,7 +82,7 @@ function App() {
      setFormData((prevFormData)=> ({...prevFormData, [name]:value}));
    }
 
-   const handleSubmit = (e) => {
+   const handleFormSubmit = (e) => {
     // Override the default SSR form behaviour
     e.preventDefault();
     console.log(formData.name);
@@ -97,9 +98,15 @@ function App() {
     console.log(selectRef.current.value);
    }
 
+   const {register, handleSubmit, formState:{errors}} = useForm();
+
+   const onSubmit = (data) => {
+    console.log(data);
+   }
+
   return (
     <>
-      <div>
+       <div>
         <h2>Controlled Form</h2>
         <label htmlFor="name">Name</label>
         <input type="text" id="name" value={name}
@@ -119,9 +126,9 @@ function App() {
         <input type="checkbox" name="color" checked={isChecked}
           onChange={handleCheckChange} />
         {/* Exampel of one liner */}
-        {/* <input type="checkbox" name="color" checked={isChecked}
-          onChange={()=>setIsChecked(false)} /> */}
-        <label>Blue</label>
+        <input type="checkbox" name="color" checked={isChecked}
+          onChange={()=>setIsChecked(false)} /> 
+         <label>Blue</label>
         {isChecked && <p>Blue is selected!</p>}
       </div>
       <div>
@@ -145,7 +152,7 @@ function App() {
             }</ul>
           </div>
         </ul>
-      </div>
+      </div> 
       <div>
         <p>Select a gender</p>
       <div onChange={handleRadioChange}>
@@ -162,7 +169,7 @@ function App() {
       </div>
 
       <div>
-        <form onSubmit={handleSubmit}>
+         <form onSubmit={handleFormSubmit}>
           <label htmlFor='name'>Name</label>
           <input type="text" name="name" value={formData.name} onChange={handleFormChange}/>
 
@@ -172,7 +179,8 @@ function App() {
           <label htmlFor='message'>Message</label>
           <textarea name="message" value={formData.message} onChange={handleFormChange}/>
           <button type="submit">Submit</button>
-        </form>
+        </form> 
+         </div> */}
         <div>
           <h2>Uncontrolled Form</h2>
           <form onSubmit={handleUCFormSubmit}>
@@ -196,6 +204,33 @@ function App() {
           </form>
 
         </div>
+        <div>
+          <h2>Form with react hook form library</h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <p>
+            <label htmlFor='name' >Name</label>
+            <input type="name" {...register('name')}/>
+            </p>
+            <p>
+            <label htmlFor="email" >Email</label>
+            <input type="email" {...register('email')}/>
+            </p>
+            <p>
+            <label htmlFor="password" >Password</label>
+            <input type="password" {...register('password')}/>
+            </p>
+            <p>
+              <label htmlFor="gender" >Gender</label>
+              <select {...register('gender')}>
+                <option value="male">male</option>
+                <option value="female">female</option>
+                <option value="noprefered">Prefered not to state</option>
+              </select>
+            </p>
+            <button type="submit">Submit</button>
+          </form>
+
+       
       </div>
     </>
   )
