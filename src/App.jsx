@@ -1,5 +1,6 @@
-import { useState,useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form';
+
 import './App.css'
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
   const inputRef = useRef(null);
 
   const handleChange = (e) => {
-    if (e.target.value.length > 0){
+    if (e.target.value.length > 0) {
       setName(e.target.value);
       setNameError(null);
     }
@@ -20,7 +21,7 @@ function App() {
       setNameError("Name is required");
       setName(e.target.value);
     }
-    
+
   };
 
   const [selectedOption, setSelectedOption] = useState('male');
@@ -55,63 +56,64 @@ function App() {
     setColors([...colors])
   }
 
-  const [radioSelection, setRadioSelection]  = useState('male')
+  const [radioSelection, setRadioSelection] = useState('male')
 
   const handleRadioChange = (e) => {
     console.log(e.target.value);
     setRadioSelection(e.target.value);
-   }
+  }
 
 
-   const [formData, setFormData] = useState({name:'',email:'',message:''});
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-   // e.target is the input calling the method
-   const handleFormChange = (e) => {
-     const {name, value} = e.target;
-     // e.target.value -> whatever user input in the form
-     // e.target.name  ->name property from the form
+  // e.target is the input calling the method
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    // e.target.value -> whatever user input in the form
+    // e.target.name  ->name property from the form
 
-     // update the stateformdata 
-     // the value of formData before the update is defined in prevFormData
+    // update the stateformdata 
+    // the value of formData before the update is defined in prevFormData
 
     // setFormData({...formData, [name]:value}))
     // name  - Muzaffar
     // email - wanmuz@gmail.com
     // message - Please help me with bug abc
-    
-     setFormData((prevFormData)=> ({...prevFormData, [name]:value}));
-   }
 
-   const handleFormSubmit = (e) => {
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  }
+
+  const handleFormSubmit = (e) => {
     // Override the default SSR form behaviour
     e.preventDefault();
     console.log(formData.name);
     console.log(formData.email);
     console.log(formData.message);
-   }
+  }
 
-   const handleUCFormSubmit = (e) => {
+  const handleUCFormSubmit = (e) => {
     e.preventDefault();
     // equivalent to DOM Manipualtion getElementId(xx) . value
     console.log(inputRef.current.value);
     console.log(checkbox.current.value);
     console.log(selectRef.current.value);
-   }
+  }
 
-   const {register, handleSubmit, formState:{errors}} = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  console.log(watch("name"));
 
-   const onSubmit = (data) => {
+  const onSubmit = (data) => {
     console.log(data);
-   }
+  }
 
   return (
     <>
-       <div>
+      <div>
         <h2>Controlled Form</h2>
         <label htmlFor="name">Name</label>
         <input type="text" id="name" value={name}
           onChange={handleChange} />
-          { nameError && <p style={{color:'red'}}>{nameError}</p>  }
+        {nameError && <p style={{ color: 'red' }}>{nameError}</p>}
       </div>
       <div>
         <label htmlFor="gender">Select your gender</label>
@@ -127,8 +129,8 @@ function App() {
           onChange={handleCheckChange} />
         {/* Exampel of one liner */}
         <input type="checkbox" name="color" checked={isChecked}
-          onChange={()=>setIsChecked(false)} /> 
-         <label>Blue</label>
+          onChange={() => setIsChecked(false)} />
+        <label>Blue</label>
         {isChecked && <p>Blue is selected!</p>}
       </div>
       <div>
@@ -152,85 +154,92 @@ function App() {
             }</ul>
           </div>
         </ul>
-      </div> 
+      </div>
       <div>
         <p>Select a gender</p>
-      <div onChange={handleRadioChange}>
-        {
-          options.map(val=>
-            <p key={val.value}>
-            <input type="radio" value={val.value} 
-            name="gender"/>{val.name}
-            </p>
+        <div onChange={handleRadioChange}>
+          {
+            options.map(val =>
+              <p key={val.value}>
+                <input type="radio" value={val.value}
+                  name="gender" />{val.name}
+              </p>
             )
-        }
-        <p>Selection from Radio: {radioSelection}</p>
+          }
+          <p>Selection from Radio: {radioSelection}</p>
         </div>
       </div>
 
       <div>
-         <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleFormSubmit}>
           <label htmlFor='name'>Name</label>
-          <input type="text" name="name" value={formData.name} onChange={handleFormChange}/>
+          <input type="text" name="name" value={formData.name} onChange={handleFormChange} />
 
           <label htmlFor='email'>Email</label>
-          <input type="email" name="email" value={formData.email} onChange={handleFormChange}/>
+          <input type="email" name="email" value={formData.email} onChange={handleFormChange} />
 
           <label htmlFor='message'>Message</label>
-          <textarea name="message" value={formData.message} onChange={handleFormChange}/>
+          <textarea name="message" value={formData.message} onChange={handleFormChange} />
           <button type="submit">Submit</button>
-        </form> 
-         </div> */}
-        <div>
-          <h2>Uncontrolled Form</h2>
-          <form onSubmit={handleUCFormSubmit}>
-            <p>
+        </form>
+      </div> 
+      <div>
+        <h2>Uncontrolled Form</h2>
+        <form onSubmit={handleUCFormSubmit}>
+          <p>
             <label htmlFor="">Name</label>
-            <input type="text" ref={inputRef}/>
-            </p>
-            <p>
+            <input type="text" ref={inputRef} />
+          </p>
+          <p>
             <label htmlFor="Color">Color</label>
             <select name="color" id="color" ref={selectRef}>
               <option value="red">Red</option>
               <option value="green">Green</option>
               <option value="blue">Blue</option>
             </select>
-            </p>
-            <p>
-              <label htmlFor="checkbox">Do you like React?</label>
-              <input type="checkbox" ref={checkbox}/>
-            </p>
-            <button type="sumbit">Submit</button>
-          </form>
+          </p>
+          <p>
+            <label htmlFor="checkbox">Do you like React?</label>
+            <input type="checkbox" ref={checkbox} />
+          </p>
+          <button type="sumbit">Submit</button>
+        </form>
 
-        </div>
-        <div>
-          <h2>Form with react hook form library</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <p>
+      </div>
+      <div>
+        <h2>Form with react hook form library</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <p>
             <label htmlFor='name' >Name</label>
-            <input type="name" {...register('name')}/>
-            </p>
-            <p>
+            <input type="name" {...register('name', { required: true })} />
+            { errors.name && <p style={{color:'red'}}>Name is required</p>  }
+          </p>
+          <p>
             <label htmlFor="email" >Email</label>
-            <input type="email" {...register('email')}/>
-            </p>
-            <p>
+            <input type="email" {...register('email', { required: true, 
+              pattern: /^\S+@\S+$/i })} />
+            { errors.email && <p style={{color:'red'}}>
+              Email is required and needs to follow the right format</p>  }
+          </p>
+          <p>
             <label htmlFor="password" >Password</label>
-            <input type="password" {...register('password')}/>
-            </p>
-            <p>
-              <label htmlFor="gender" >Gender</label>
-              <select {...register('gender')}>
-                <option value="male">male</option>
-                <option value="female">female</option>
-                <option value="noprefered">Prefered not to state</option>
-              </select>
-            </p>
-            <button type="submit">Submit</button>
-          </form>
+            <input type="password" {...register('password', { required: true, 
+              minLength: 6, maxLength: 12 })} />
+              { errors.password && <p style={{color:'red'}}>Password is required and needs 
+              to be between 6 and 12</p>  }
+          </p>
+          <p>
+            <label htmlFor="gender" >Gender</label>
+            <select {...register('gender')}>
+              <option value="male">male</option>
+              <option value="female">female</option>
+              <option value="noprefered">Prefered not to state</option>
+            </select>
+          </p>
+          <button type="submit">Submit</button>
+        </form>
 
-       
+
       </div>
     </>
   )
