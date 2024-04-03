@@ -1,9 +1,26 @@
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 import './App.css'
 
 function App() {
   const [name, setName] = useState('');
-  const handleChange = (e) => setName(e.target.value);
+  const [nameError, setNameError] = useState(null);
+
+  // We create reference to each element of the form using useRef hook
+  const selectRef = useRef(null);
+  const checkbox = useRef(null);
+  const inputRef = useRef(null);
+
+  const handleChange = (e) => {
+    if (e.target.value.length > 0){
+      setName(e.target.value);
+      setNameError(null);
+    }
+    else {
+      setNameError("Name is required");
+      setName(e.target.value);
+    }
+    
+  };
 
   const [selectedOption, setSelectedOption] = useState('male');
 
@@ -72,12 +89,22 @@ function App() {
     console.log(formData.message);
    }
 
+   const handleUCFormSubmit = (e) => {
+    e.preventDefault();
+    // equivalent to DOM Manipualtion getElementId(xx) . value
+    console.log(inputRef.current.value);
+    console.log(checkbox.current.value);
+    console.log(selectRef.current.value);
+   }
+
   return (
     <>
       <div>
+        <h2>Controlled Form</h2>
         <label htmlFor="name">Name</label>
         <input type="text" id="name" value={name}
           onChange={handleChange} />
+          { nameError && <p style={{color:'red'}}>{nameError}</p>  }
       </div>
       <div>
         <label htmlFor="gender">Select your gender</label>
@@ -146,6 +173,29 @@ function App() {
           <textarea name="message" value={formData.message} onChange={handleFormChange}/>
           <button type="submit">Submit</button>
         </form>
+        <div>
+          <h2>Uncontrolled Form</h2>
+          <form onSubmit={handleUCFormSubmit}>
+            <p>
+            <label htmlFor="">Name</label>
+            <input type="text" ref={inputRef}/>
+            </p>
+            <p>
+            <label htmlFor="Color">Color</label>
+            <select name="color" id="color" ref={selectRef}>
+              <option value="red">Red</option>
+              <option value="green">Green</option>
+              <option value="blue">Blue</option>
+            </select>
+            </p>
+            <p>
+              <label htmlFor="checkbox">Do you like React?</label>
+              <input type="checkbox" ref={checkbox}/>
+            </p>
+            <button type="sumbit">Submit</button>
+          </form>
+
+        </div>
       </div>
     </>
   )
